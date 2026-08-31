@@ -8,34 +8,37 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style type="text/tailwindcss">
-    /* Play CDN: do NOT @import "tailwindcss" — the browser build already injects it (double preflight if imported). */
-    /* Radius override: rounded-md = 12px (buttons, icon tiles); rounded-lg = 20px (cards, map, menu, CTA). */
-    @theme {
-      --font-sans: "Inter", system-ui, sans-serif;
-      --color-brand: #6D28D9;
-      --color-brand-strong: #5B21B6;
-      --color-brand-tint: #F5F3FF;
-      --color-status-active: #059669;
-      --color-status-active-bg: #ECFDF5;
-      --color-status-stolen: #DC2626;
-      --color-status-stolen-bg: #FEF2F2;
-      --color-status-damaged: #D97706;
-      --color-status-damaged-bg: #FFFBEB;
-      --color-status-reported: #2563EB;
-      --color-status-reported-bg: #EFF6FF;
-      --color-status-removed: #52525B;
-      --color-status-removed-bg: #F4F4F5;
-      --shadow-sm: 0 1px 2px rgb(24 24 27 / 0.06);
-      --shadow-md: 0 4px 12px rgb(24 24 27 / 0.08);
-      --shadow-lg: 0 12px 32px rgb(24 24 27 / 0.12);
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 20px;
-      --radius-pill: 9999px;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+          colors: {
+            brand: { DEFAULT: "#6D28D9", strong: "#5B21B6", tint: "#F5F3FF" },
+            status: {
+              active: "#059669",
+              "active-bg": "#ECFDF5",
+              stolen: "#DC2626",
+              "stolen-bg": "#FEF2F2",
+              damaged: "#D97706",
+              "damaged-bg": "#FFFBEB",
+              reported: "#2563EB",
+              "reported-bg": "#EFF6FF",
+              removed: "#52525B",
+              "removed-bg": "#F4F4F5",
+            },
+          },
+          borderRadius: { sm: "6px", md: "12px", lg: "20px" },
+          boxShadow: {
+            sm: "0 1px 2px rgba(24, 24, 27, 0.06)",
+            md: "0 4px 12px rgba(24, 24, 27, 0.08)",
+            lg: "0 12px 32px rgba(24, 24, 27, 0.12)",
+          },
+        },
+      },
+    };
+  </script>
   <style>
     :root {
       --color-brand: #6D28D9;
@@ -304,10 +307,10 @@
                   <circle cx="400" cy="115" r="6" fill="var(--pin-8)" />
                 </g>
 
-                <g class="pin-pulse motion-safe:[animation:pin-pulse_2.4s_ease-in-out_infinite]">
+                <g class="pin-pulse">
                   <path transform="translate(175 305)" d="M0-18c-7 10-10 14-10 20a10 10 0 0 0 20 0c0-6-3-10-10-20z" fill="var(--color-status-stolen)" stroke="#FFFFFF" stroke-width="2" />
                 </g>
-                <g class="pin-pulse motion-safe:[animation:pin-pulse_2.4s_ease-in-out_infinite]">
+                <g class="pin-pulse">
                   <path transform="translate(355 85)" d="M0-18c-7 10-10 14-10 20a10 10 0 0 0 20 0c0-6-3-10-10-20z" fill="var(--color-status-damaged)" stroke="#FFFFFF" stroke-width="2" />
                 </g>
               </g>
