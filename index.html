@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="de" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plakatradar — Jedes Plakat. Ein Pin. Eine Karte.</title>
+    <meta
+      name="description"
+      content="Plakatradar ist die Karte für Wahlkampfteams aller Parteien: Plakate als Pins mit Position, Fotos und Status. Kostenlos starten."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z' fill='%236D28D9'/%3E%3Ccircle cx='12' cy='10' r='3' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: { DEFAULT: "#6D28D9", strong: "#5B21B6", tint: "#F5F3FF" },
+              zinc: {
+                50: "#FAFAFA",
+                100: "#F4F4F5",
+                200: "#E4E4E7",
+                300: "#D4D4D8",
+                400: "#A1A1AA",
+                500: "#71717A",
+                600: "#52525B",
+                700: "#3F3F46",
+                800: "#27272A",
+                900: "#18181B",
+              },
+              status: {
+                active: "#059669",
+                "active-bg": "#ECFDF5",
+                stolen: "#DC2626",
+                "stolen-bg": "#FEF2F2",
+                damaged: "#D97706",
+                "damaged-bg": "#FFFBEB",
+                reported: "#2563EB",
+                "reported-bg": "#EFF6FF",
+                removed: "#52525B",
+                "removed-bg": "#F4F4F5",
+              },
+            },
+            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+            boxShadow: {
+              sm: "0 1px 2px rgba(24, 24, 27, 0.06)",
+              md: "0 4px 12px rgba(24, 24, 27, 0.08)",
+              lg: "0 12px 32px rgba(24, 24, 27, 0.12)",
+            },
+          },
+        },
+      };
+    </script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+    ></script>
+    <style type="text/tailwindcss">
+      .eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.08em] text-brand;
+      }
+      .btn-primary {
+        @apply items-center justify-center rounded-xl bg-brand px-6 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-brand-strong active:bg-brand-strong;
+      }
+      .btn-secondary {
+        @apply items-center justify-center rounded-xl border border-zinc-300 bg-white px-6 py-3 text-base font-semibold text-zinc-900 transition-colors duration-200 hover:border-zinc-400 hover:bg-zinc-50 active:border-zinc-500;
+      }
+      .btn-secondary-sm {
+        @apply items-center justify-center rounded-xl border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition-colors duration-200 hover:border-zinc-400 hover:bg-zinc-50 active:border-zinc-500;
+      }
+      .card {
+        @apply rounded-[20px] border border-zinc-200 bg-white transition duration-200;
+      }
+      .badge {
+        @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold;
+      }
+      .badge-dot {
+        @apply h-1.5 w-1.5 rounded-full;
+      }
+      .icon-tile {
+        @apply flex h-12 w-12 items-center justify-center rounded-xl bg-brand-tint;
+      }
+    </style>
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+      html {
+        scroll-padding-top: 88px;
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid #6D28D9;
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-white font-sans text-zinc-700 antialiased">
+    <!-- 1 · Header -->
+    <header
+      x-data="{ open: false, scrolled: false }"
+      @scroll.window="scrolled = window.scrollY > 8"
+      class="sticky top-0 z-50 bg-white transition-shadow duration-200"
+      :class="scrolled ? 'border-b border-zinc-200 shadow-sm' : 'border-b border-transparent'"
+    >
+      <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+        <div class="flex h-16 items-center justify-between gap-6">
+          <a
+            href="#top"
+            class="flex items-center gap-2"
+            aria-label="Plakatradar — zum Seitenanfang"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"
+                fill="#6D28D9"
+              />
+              <circle cx="12" cy="10" r="3" fill="#FFFFFF" />
+            </svg>
+            <span class="text-lg font-semibold text-zinc-900">Plakatradar</span>
+          </a>
+
+          <nav
+            class="hidden items-center gap-4 md:flex"
+            aria-label="Hauptnavigation"
+          >
+            <a
+              href="#funktionen"
+              class="rounded-md px-2 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+              >Funktionen</a
+            >
+            <span class="text-zinc-300" aria-hidden="true">·</span>
+            <a
+              href="#ablauf"
+              class="rounded-md px-2 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+              >Ablauf</a
+            >
+            <span class="text-zinc-300" aria-hidden="true">·</span>
+            <a
+              href="#stimmen"
+              class="rounded-md px-2 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+              >Stimmen</a
+            >
+          </nav>
+
+          <div class="flex items-center gap-2">
+            <a href="#" class="btn-secondary-sm hidden md:inline-flex"
+              >Kostenlos starten</a
+            >
+
+            <div class="relative md:hidden" @click.outside="open = false">
+              <button
+                type="button"
+                @click="open = !open"
+                class="flex h-11 w-11 items-center justify-center rounded-xl text-zinc-900"
+                :aria-expanded="open"
+                aria-controls="mobile-menu"
+                aria-label="Menü öffnen oder schließen"
+              >
+                <svg
+                  x-show="!open"
+                  class="h-6 w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg
+                  x-show="open"
+                  x-cloak
+                  class="h-6 w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <div
+                id="mobile-menu"
+                x-show="open"
+                x-cloak
+                x-transition.opacity.duration.150ms
+                class="absolute right-0 top-[calc(100%+8px)] w-60 rounded-[20px] border border-zinc-200 bg-white p-4 shadow-lg"
+              >
+                <nav class="flex flex-col" aria-label="Mobile Navigation">
+                  <a
+                    href="#funktionen"
+                    @click="open = false"
+                    class="rounded-md px-2 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                    >Funktionen</a
+                  >
+                  <a
+                    href="#ablauf"
+                    @click="open = false"
+                    class="rounded-md px-2 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                    >Ablauf</a
+                  >
+                  <a
+                    href="#stimmen"
+                    @click="open = false"
+                    class="rounded-md px-2 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                    >Stimmen</a
+                  >
+                </nav>
+                <a
+                  href="#"
+                  @click="open = false"
+                  class="btn-secondary-sm mt-2 inline-flex w-full"
+                  >Kostenlos starten</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- 2 · Hero inkl. Karten-Teaser -->
+      <section class="bg-white py-12 md:py-24">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <div class="grid items-center gap-6 md:grid-cols-2">
+            <div>
+              <p class="eyebrow">Für Wahlkampfteams aller Parteien</p>
+              <h1
+                class="mt-4 text-balance text-[40px] font-semibold leading-[1.1] text-zinc-900 md:text-[60px]"
+              >
+                Jedes Plakat. Ein Pin. Eine Karte.
+              </h1>
+              <p
+                class="mt-6 max-w-[52ch] text-lg leading-relaxed text-pretty text-zinc-700"
+              >
+                Alle Plakate deines Teams als Pins auf einer gemeinsamen
+                Karte — mit Position, Fotos und Status.
+              </p>
+              <div class="mt-8 flex flex-wrap gap-4">
+                <a href="#" class="btn-primary inline-flex"
+                  >Kostenlos starten</a
+                >
+                <a href="#ablauf" class="btn-secondary inline-flex"
+                  >So funktioniert’s</a
+                >
+              </div>
+            </div>
+
+            <div
+              class="relative min-h-[300px] w-full overflow-hidden rounded-[20px] border border-zinc-200 shadow-md aspect-[4/3]"
+            >
+              <svg
+                viewBox="0 0 560 420"
+                preserveAspectRatio="xMidYMid slice"
+                class="absolute inset-0 h-full w-full"
+                role="img"
+                aria-label="Abstrahierte Karte von Musterstadt und Region mit Plakat-Pins verschiedener Teammitglieder sowie zwei Status-Pins"
+              >
+                <rect width="560" height="420" fill="#FAFAFA" />
+                <!-- Stadtblöcke -->
+                <g fill="#F4F4F5">
+                  <rect x="92" y="14" width="70" height="44" rx="8" />
+                  <rect x="204" y="82" width="72" height="48" rx="8" />
+                  <rect x="304" y="84" width="72" height="44" rx="8" />
+                  <rect x="424" y="84" width="52" height="44" rx="8" />
+                  <rect x="100" y="152" width="56" height="40" rx="8" />
+                  <rect x="306" y="150" width="70" height="44" rx="8" />
+                  <rect x="414" y="152" width="52" height="38" rx="8" />
+                  <rect x="100" y="224" width="52" height="32" rx="8" />
+                  <rect x="306" y="232" width="66" height="26" rx="8" />
+                  <rect x="100" y="354" width="48" height="44" rx="8" />
+                  <rect x="206" y="354" width="62" height="46" rx="8" />
+                  <rect x="424" y="354" width="44" height="42" rx="8" />
+                </g>
+                <!-- Nebenstraßen -->
+                <g fill="none" stroke="#E4E4E7" stroke-width="2">
+                  <path d="M0 70 C 150 64, 350 76, 560 68" />
+                  <path d="M0 142 C 160 138, 340 146, 560 138" />
+                  <path d="M0 276 C 170 270, 350 282, 560 272" />
+                  <path d="M0 342 C 200 336, 360 348, 560 338" />
+                  <path d="M78 0 C 84 140, 74 300, 82 420" />
+                  <path d="M292 0 C 286 150, 296 300, 288 420" />
+                  <path d="M398 0 C 404 140, 394 290, 402 420" />
+                  <path d="M492 0 C 486 160, 496 320, 488 420" />
+                  <path d="M150 274 L 230 344" />
+                </g>
+                <!-- Hauptstraßen -->
+                <g fill="none" stroke="#D4D4D8" stroke-linecap="round">
+                  <path
+                    d="M0 210 C 150 198, 330 222, 560 206"
+                    stroke-width="6"
+                  />
+                  <path
+                    d="M175 0 C 168 130, 184 300, 172 420"
+                    stroke-width="6"
+                  />
+                  <path
+                    d="M0 402 C 190 330, 400 170, 560 46"
+                    stroke-width="5"
+                  />
+                </g>
+                <!-- Team-Pins (eine Farbe pro Teammitglied) -->
+                <g stroke="#FFFFFF" stroke-width="2">
+                  <circle cx="126" cy="178" r="5" fill="#DC2626" />
+                  <circle cx="245" cy="252" r="5" fill="#EA580C" />
+                  <circle cx="338" cy="116" r="5" fill="#CA8A04" />
+                  <circle cx="452" cy="282" r="5" fill="#16A34A" />
+                  <circle cx="86" cy="306" r="5" fill="#0D9488" />
+                  <circle cx="498" cy="142" r="5" fill="#2563EB" />
+                  <circle cx="206" cy="84" r="5" fill="#7C3AED" />
+                  <circle cx="388" cy="336" r="5" fill="#DB2777" />
+                </g>
+                <!-- Status-Pins -->
+                <g stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round">
+                  <path
+                    d="M300 196 c-3 -7.5 -10 -11 -10 -18.5 a10 10 0 1 1 20 0 c0 7.5 -7 11 -10 18.5 Z"
+                    fill="#DC2626"
+                  />
+                  <circle
+                    cx="300"
+                    cy="177.5"
+                    r="3.5"
+                    fill="#FFFFFF"
+                    stroke="none"
+                  />
+                  <path
+                    d="M176 338 c-3 -7.5 -10 -11 -10 -18.5 a10 10 0 1 1 20 0 c0 7.5 -7 11 -10 18.5 Z"
+                    fill="#D97706"
+                  />
+                  <circle
+                    cx="176"
+                    cy="319.5"
+                    r="3.5"
+                    fill="#FFFFFF"
+                    stroke="none"
+                  />
+                </g>
+              </svg>
+              <div
+                class="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"
+                    fill="#6D28D9"
+                  />
+                  <circle cx="12" cy="10" r="3" fill="#FFFFFF" />
+                </svg>
+                <span class="text-sm font-medium text-zinc-900"
+                  >248 Pins in Musterstadt</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 · Stimmen -->
+      <section id="stimmen" class="bg-zinc-50 py-12 md:py-24">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <p class="eyebrow">Stimmen</p>
+          <h2
+            class="mt-3 text-[32px] font-semibold leading-[1.15] text-zinc-900 text-balance md:text-[40px]"
+          >
+            Teams vor Ort arbeiten mit Plakatradar
+          </h2>
+          <p class="mt-4 max-w-2xl leading-relaxed text-pretty text-zinc-600">
+            Drei kurze Rückmeldungen aus der Praxis:
+          </p>
+          <div class="mt-12 grid gap-6 md:grid-cols-3">
+            <figure class="card p-6 shadow-sm">
+              <blockquote class="leading-relaxed text-pretty text-zinc-700">
+                „Ich setze einen Pin in 20 Sekunden — direkt vor Ort, mit Fotos.
+                Der Rest des Teams sieht sofort, wo das Plakat hängt.“
+              </blockquote>
+              <figcaption class="mt-6 flex items-center gap-3">
+                <span
+                  class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-tint text-sm font-semibold text-brand"
+                  aria-hidden="true"
+                  >K</span
+                >
+                <span class="text-sm font-medium text-zinc-900"
+                  >Katharina, Wahlkampfteam Nordstadt</span
+                >
+              </figcaption>
+            </figure>
+            <figure class="card p-6 shadow-sm">
+              <blockquote class="leading-relaxed text-pretty text-zinc-700">
+                „Als ein Plakat gestohlen wurde, hatten wir Position, Fotos und
+                Zeitpunkt. Die Anzeige war damit schnell erstattet.“
+              </blockquote>
+              <figcaption class="mt-6 flex items-center gap-3">
+                <span
+                  class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-tint text-sm font-semibold text-brand"
+                  aria-hidden="true"
+                  >J</span
+                >
+                <span class="text-sm font-medium text-zinc-900"
+                  >Jonas, Kreisverband Musterstadt-Land</span
+                >
+              </figcaption>
+            </figure>
+            <figure class="card p-6 shadow-sm">
+              <blockquote class="leading-relaxed text-pretty text-zinc-700">
+                „Früher lief die Koordination über Listen und drei
+                Messenger-Gruppen. Heute schauen alle auf dieselbe Karte.“
+              </blockquote>
+              <figcaption class="mt-6 flex items-center gap-3">
+                <span
+                  class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-tint text-sm font-semibold text-brand"
+                  aria-hidden="true"
+                  >M</span
+                >
+                <span class="text-sm font-medium text-zinc-900"
+                  >Miriam, Team Musterstadt-Innenstadt</span
+                >
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · Ablauf -->
+      <section id="ablauf" class="bg-white py-12 md:py-24">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <p class="eyebrow">Ablauf</p>
+          <h2
+            class="mt-3 text-[32px] font-semibold leading-[1.15] text-zinc-900 text-balance md:text-[40px]"
+          >
+            Drei Schritte bis zum ersten Pin
+          </h2>
+          <p class="mt-4 max-w-2xl leading-relaxed text-pretty text-zinc-600">
+            Kein Schulungsaufwand: Pin setzen, Status pflegen, Überblick
+            behalten.
+          </p>
+          <div class="mt-12 grid gap-6 md:grid-cols-3">
+            <div class="card p-6">
+              <div class="flex items-center justify-between">
+                <div class="icon-tile">
+                  <svg
+                    class="h-6 w-6 text-brand"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M20 10c0 5.57-6.4 10.68-8 11.82C10.4 20.68 4 15.57 4 10a8 8 0 1 1 16 0Z"
+                    />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <span
+                  class="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                  >Schritt 1</span
+                >
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Plakat pinnen
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Vor Ort GPS-Position erfassen, Adresse ergänzen, bis zu fünf
+                Fotos anhängen. In 20 Sekunden hängt der Pin auf der Karte.
+              </p>
+            </div>
+            <div class="card p-6">
+              <div class="flex items-center justify-between">
+                <div class="icon-tile">
+                  <svg
+                    class="h-6 w-6 text-brand"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1Z"
+                    />
+                    <path d="M4 22v-7" />
+                  </svg>
+                </div>
+                <span
+                  class="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                  >Schritt 2</span
+                >
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Status pflegen
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Setze den Status: „Aktiv“, „Gestohlen“ oder „Beschädigt“. Flags
+                wie „Anzeige erstattet“ und „Entfernt“ halten den Rest fest.
+              </p>
+            </div>
+            <div class="card p-6">
+              <div class="flex items-center justify-between">
+                <div class="icon-tile">
+                  <svg
+                    class="h-6 w-6 text-brand"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 3 4 5v16l5-2 6 2 5-2V3l-5 2-6-2Z" />
+                    <path d="M9 3v16" />
+                    <path d="M15 5v16" />
+                  </svg>
+                </div>
+                <span
+                  class="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                  >Schritt 3</span
+                >
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Überblick behalten
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Alle Pins des Teams auf einer Karte, die Umgebung-Ansicht für
+                die Touren, die Zahlen für die Auswertung.
+              </p>
+            </div>
+          </div>
+          <p class="mt-8">
+            <a
+              href="#status"
+              class="text-sm font-medium text-brand hover:text-brand-strong"
+            >
+              Wie Status und Flags zusammenhängen →
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <!-- 5 · Funktionen -->
+      <section id="funktionen" class="bg-zinc-50 py-12 md:py-24">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <p class="eyebrow">Funktionen</p>
+          <h2
+            class="mt-3 text-[32px] font-semibold leading-[1.15] text-zinc-900 text-balance md:text-[40px]"
+          >
+            Das steckt in Plakatradar
+          </h2>
+          <p class="mt-4 max-w-2xl leading-relaxed text-pretty text-zinc-600">
+            Sechs Funktionen, genau auf die Arbeit mit Plakaten zugeschnitten —
+            im Team, vor Ort und im Feld.
+          </p>
+          <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="card p-6 hover:border-zinc-300 hover:shadow-sm">
+              <div class="icon-tile">
+                <svg
+                  class="h-6 w-6 text-brand"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20 10c0 5.57-6.4 10.68-8 11.82C10.4 20.68 4 15.57 4 10a8 8 0 1 1 16 0Z"
+                  />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Karte &amp; Pins
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Jedes Plakat ist ein Pin auf der Team-Karte: mit GPS-Position,
+                Adresse und bis zu fünf Fotos.
+              </p>
+            </div>
+            <div class="card p-6 hover:border-zinc-300 hover:shadow-sm">
+              <div class="icon-tile">
+                <svg
+                  class="h-6 w-6 text-brand"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1Z"
+                  />
+                  <path d="M4 22v-7" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Status &amp; Flags
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                „Aktiv“, „Gestohlen“ oder „Beschädigt“ — plus „Anzeige
+                erstattet“ und „Entfernt“. Jede Meldung bleibt nachvollziehbar.
+              </p>
+            </div>
+            <div class="card p-6 hover:border-zinc-300 hover:shadow-sm">
+              <div class="icon-tile">
+                <svg
+                  class="h-6 w-6 text-brand"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                  <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                  <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                  <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                  <path
+                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                  />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Pin-Farben pro Person
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Jedes Teammitglied hat eine eigene Pin-Farbe. Die Karte zeigt
+                auf einen Blick, wer wo aktiv war.
+              </p>
+            </div>
+            <div class="card p-6 hover:border-zinc-300 hover:shadow-sm">
+              <div class="icon-tile">
+                <svg
+                  class="h-6 w-6 text-brand"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polygon
+                    points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88"
+                  />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">Umgebung</h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Die Umgebung-Ansicht zeigt, welche Plakate in der Nähe hängen —
+                nützlich auf jeder Tour durchs Wahlgebiet.
+              </p>
+            </div>
+            <div class="card p-6 hover:border-zinc-300 hover:shadow-sm">
+              <div class="icon-tile">
+                <svg
+                  class="h-6 w-6 text-brand"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="2" y1="2" x2="22" y2="22" />
+                  <path d="M8.5 16.5a5 5 0 0 1 7 0" />
+                  <path d="M2 8.8a11 11 0 0 1 5.5-2.7" />
+                  <path d="M22 8.8a11 11 0 0 0-8.2-3" />
+                  <path d="M5 12.6a7.4 7.4 0 0 1 3.1-2" />
+                  <path d="M19 12.6a7.4 7.4 0 0 0-2-1.6" />
+                  <path d="M12 20h.01" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Offline im Einsatz
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Als Progressive Web App direkt im Browser nutzbar — und
+                offline-fähig, damit die Karte auch ohne Empfang im Feld
+                funktioniert.
+              </p>
+            </div>
+            <div class="card p-6 hover:border-zinc-300 hover:shadow-sm">
+              <div class="icon-tile">
+                <svg
+                  class="h-6 w-6 text-brand"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+                Zahlen &amp; Auswertung
+              </h3>
+              <p class="mt-2 leading-relaxed text-pretty text-zinc-600">
+                Wie viele Plakate hängen, wie sind die Status verteilt, wie
+                viele Vorfälle sind dokumentiert? Pro Team auf einen Blick.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 · Status-Lebenszyklus -->
+      <section id="status" class="bg-white py-12 md:py-24">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <p class="eyebrow">Status-Modell</p>
+          <h2
+            class="mt-3 text-[32px] font-semibold leading-[1.15] text-zinc-900 text-balance md:text-[40px]"
+          >
+            Jeder Vorfall wird sauber dokumentiert
+          </h2>
+          <div class="mt-12 grid gap-6 lg:grid-cols-2">
+            <div>
+              <p class="leading-relaxed text-pretty text-zinc-600">
+                Jeder Pin trägt einen Status: „Aktiv“, „Gestohlen“ oder
+                „Beschädigt“. Der Status beschreibt, wie es um das Plakat steht.
+              </p>
+              <p class="mt-4 leading-relaxed text-pretty text-zinc-600">
+                Zwei Flags kommen unabhängig davon dazu: „Entfernt“ dokumentiert
+                den Abbau, „Anzeige erstattet“ die Grundlage für die Behörden.
+                Status und Flags werden pro „Plakat-Eintrag“ festgehalten —
+                zusammen mit Position, Adresse und Fotos.
+              </p>
+              <div class="card mt-8 p-6 shadow-sm">
+                <p class="text-sm font-medium text-zinc-900">
+                  Kombinationen sind erlaubt — und üblich:
+                </p>
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                  <span class="badge bg-status-stolen-bg text-status-stolen"
+                    ><span class="badge-dot bg-status-stolen"></span
+                    >Gestohlen</span
+                  >
+                  <span class="text-zinc-300" aria-hidden="true">+</span>
+                  <span class="badge bg-status-reported-bg text-status-reported"
+                    ><span class="badge-dot bg-status-reported"></span>Anzeige
+                    erstattet</span
+                  >
+                </div>
+                <div class="mt-2 flex flex-wrap items-center gap-2">
+                  <span class="badge bg-status-damaged-bg text-status-damaged"
+                    ><span class="badge-dot bg-status-damaged"></span
+                    >Beschädigt</span
+                  >
+                  <span class="text-zinc-300" aria-hidden="true">+</span>
+                  <span class="badge bg-status-removed-bg text-status-removed"
+                    ><span class="badge-dot bg-status-removed"></span
+                    >Entfernt</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-6">
+              <div class="card p-6">
+                <p
+                  class="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                >
+                  Plakat-Eintrag
+                </p>
+                <p class="mt-1 font-semibold text-zinc-900">
+                  Marktstraße 12, Musterstadt
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="badge bg-status-active-bg text-status-active"
+                    ><span class="badge-dot bg-status-active"></span>Aktiv</span
+                  >
+                </div>
+                <p class="mt-3 text-sm text-zinc-600">
+                  2 Fotos · GPS-Position erfasst
+                </p>
+              </div>
+              <div class="card p-6">
+                <p
+                  class="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                >
+                  Plakat-Eintrag
+                </p>
+                <p class="mt-1 font-semibold text-zinc-900">
+                  Bahnhofstraße 3, Musterstadt
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="badge bg-status-stolen-bg text-status-stolen"
+                    ><span class="badge-dot bg-status-stolen"></span
+                    >Gestohlen</span
+                  >
+                  <span class="badge bg-status-reported-bg text-status-reported"
+                    ><span class="badge-dot bg-status-reported"></span>Anzeige
+                    erstattet</span
+                  >
+                </div>
+                <p class="mt-3 text-sm text-zinc-600">
+                  5 Fotos · Meldung mit Position und Zeitpunkt dokumentiert
+                </p>
+              </div>
+              <div class="card p-6">
+                <p
+                  class="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                >
+                  Plakat-Eintrag
+                </p>
+                <p class="mt-1 font-semibold text-zinc-900">
+                  Ringallee 45, Musterstadt
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="badge bg-status-damaged-bg text-status-damaged"
+                    ><span class="badge-dot bg-status-damaged"></span
+                    >Beschädigt</span
+                  >
+                  <span class="badge bg-status-removed-bg text-status-removed"
+                    ><span class="badge-dot bg-status-removed"></span
+                    >Entfernt</span
+                  >
+                </div>
+                <p class="mt-3 text-sm text-zinc-600">
+                  3 Fotos · Plakat am Folgetag abgehängt
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 · Zahlen -->
+      <section class="bg-zinc-50 py-12 md:py-16">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <dl
+            class="grid grid-cols-2 gap-6 md:grid-cols-4 md:divide-x md:divide-zinc-200"
+          >
+            <div class="md:px-6 md:first:pl-0">
+              <dd class="text-[32px] font-semibold text-zinc-900">12.480</dd>
+              <dt class="mt-1 text-sm font-medium text-zinc-600">
+                Plakate gepinnt
+              </dt>
+            </div>
+            <div class="md:px-6">
+              <dd class="text-[32px] font-semibold text-zinc-900">1.270</dd>
+              <dt class="mt-1 text-sm font-medium text-zinc-600">
+                Meldungen dokumentiert
+              </dt>
+            </div>
+            <div class="md:px-6">
+              <dd class="text-[32px] font-semibold text-zinc-900">38</dd>
+              <dt class="mt-1 text-sm font-medium text-zinc-600">
+                Städte und Regionen
+              </dt>
+            </div>
+            <div class="md:px-6 md:last:pr-0">
+              <dd class="text-[32px] font-semibold text-zinc-900">4 Minuten</dd>
+              <dt class="mt-1 text-sm font-medium text-zinc-600">
+                von der Anmeldung bis zum ersten Pin
+              </dt>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- 8 · Finaler CTA -->
+      <section class="bg-white py-12 md:py-24">
+        <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+          <div
+            class="rounded-[20px] bg-brand-tint p-12 text-center md:p-16"
+          >
+            <h2
+              class="mx-auto max-w-2xl text-[32px] font-semibold leading-[1.15] text-zinc-900 text-balance md:text-[40px]"
+            >
+              Jedes Plakat. Ein Pin. Eine Karte.
+            </h2>
+            <p
+              class="mx-auto mt-4 max-w-xl leading-relaxed text-pretty text-zinc-600"
+            >
+              Die Registrierung ist kostenlos. In wenigen Minuten setzt dein
+              Team den ersten Pin.
+            </p>
+            <div class="mt-8">
+              <a href="#" class="btn-primary inline-flex">Kostenlos starten</a>
+            </div>
+            <p class="mt-4">
+              <a
+                href="#ablauf"
+                class="text-sm font-medium text-brand hover:text-brand-strong"
+                >So funktioniert’s</a
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 9 · Footer -->
+    <footer class="border-t border-zinc-200 bg-zinc-50 py-12 md:py-16">
+      <div class="mx-auto max-w-[1152px] px-6 md:px-8">
+        <div
+          class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between"
+        >
+          <div class="max-w-sm">
+            <a
+              href="#top"
+              class="flex items-center gap-2"
+              aria-label="Plakatradar — zum Seitenanfang"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"
+                  fill="#6D28D9"
+                />
+                <circle cx="12" cy="10" r="3" fill="#FFFFFF" />
+              </svg>
+              <span class="text-lg font-semibold text-zinc-900"
+                >Plakatradar</span
+              >
+            </a>
+            <p class="mt-3 text-sm leading-relaxed text-zinc-600">
+              Die Karte für Wahlkampfteams aller Parteien — vom kleinen Ehrenamt
+              bis zum Kreisverband.
+            </p>
+          </div>
+          <nav
+            class="flex flex-col gap-3 md:items-end"
+            aria-label="Footer-Navigation"
+          >
+            <div class="flex flex-wrap items-center gap-2">
+              <a
+                href="#funktionen"
+                class="rounded-md px-2 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >Funktionen</a
+              >
+              <span class="text-zinc-300" aria-hidden="true">·</span>
+              <a
+                href="#ablauf"
+                class="rounded-md px-2 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >Ablauf</a
+              >
+              <span class="text-zinc-300" aria-hidden="true">·</span>
+              <a
+                href="#stimmen"
+                class="rounded-md px-2 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >Stimmen</a
+              >
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <a
+                href="#"
+                class="rounded-md px-2 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >Impressum</a
+              >
+              <span class="text-zinc-300" aria-hidden="true">·</span>
+              <a
+                href="#"
+                class="rounded-md px-2 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >Datenschutz</a
+              >
+            </div>
+          </nav>
+        </div>
+        <p class="mt-12 text-xs text-zinc-500">© 2026 Plakatradar</p>
+      </div>
+    </footer>
+  </body>
+</html>
