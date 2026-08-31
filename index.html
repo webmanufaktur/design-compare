@@ -89,6 +89,10 @@
       .icon-tile {
         @apply flex h-12 w-12 items-center justify-center rounded-xl bg-brand-tint;
       }
+      a:focus-visible,
+      button:focus-visible {
+        @apply outline outline-2 outline-offset-2 outline-brand;
+      }
     </style>
     <style>
       [x-cloak] {
@@ -96,11 +100,6 @@
       }
       html {
         scroll-padding-top: 88px;
-      }
-      a:focus-visible,
-      button:focus-visible {
-        outline: 2px solid #6D28D9;
-        outline-offset: 2px;
       }
       @media (prefers-reduced-motion: reduce) {
         html {
