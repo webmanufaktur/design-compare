@@ -5,8 +5,11 @@ Design-eval sandbox, not a product: several AI models receive one identical desi
 ## Current artifact
 
 - `design-briefing.md` — v1.0, reviewed. English design briefing for the landing page of „Plakatradar“, a fictional multi-party election-poster map app. Brand, ~30 hex colors, px/rem tokens, 10 components, 9-section page map; deliverable is one responsive light-mode landing page, fixed stack: HTML + Tailwind CSS (CDN) + Alpine.js/htmx.
+- Deliverable (muse slot): `index.html` — 9 sections, Tailwind+Alpine CDN, light mode, reviewer OK
 - Plan: `.plans/design-briefing-landingpage.md`
+- Plan (muse): `.plans/plakatradar-landingpage-muse.md`
 - Todoist task: DES 6hPhR4F7Q3RvQHPH
+- Todoist task (muse): DES 6hQrJCHrx3XVWPFq
 
 ## Tech Stack
 
