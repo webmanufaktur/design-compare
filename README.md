@@ -4,7 +4,7 @@ Design-eval sandbox, not a product: several AI models receive one identical desi
 
 ## Current artifact
 
-- `design-briefing.md` — v1.0, reviewed. English design briefing for the landing page of „Plakatradar“, a fictional multi-party election-poster map app. Brand, ~30 hex colors, px/rem tokens, 10 components, 9-section page map; deliverable is one responsive light-mode landing page, fixed stack: HTML + Tailwind CSS (CDN) + Alpine.js/htmx.
+- `design-briefing.md` — v2.0 (2026-09-04). English design briefing for the landing page of „Plakatradar“, a fictional multi-party election-poster map app. Brand, ~30 hex colors, px/rem tokens, 10 components, 9-section page map; deliverable is one responsive light-mode landing page, fixed stack: HTML + Tailwind CSS (CDN) + Alpine.js/htmx. Tokens: IBM Plex Sans (voice/headlines) + IBM Plex Mono (eyebrow/badges/stat labels/chip), zinc-only neutrals. Anti-convergence rules: thesis + signature (frontend-design), fresh-copy/blocklist rules, topic-fixed/wording-free sections, German-only copy, modern floor (a11y/motion/semantics) in §9/§10.
 - Plan: `.plans/design-briefing-landingpage.md`
 - Todoist task: DES 6hPhR4F7Q3RvQHPH
 
